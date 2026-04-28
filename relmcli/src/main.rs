@@ -18,13 +18,38 @@ enum Commands {
 
 fn main() {
     let cli = Cli::parse();
-
     match cli.command {
-        Commands::Create { path } => println!("create {}", path),
-        Commands::Delete { name } => println!("delete {}", name),
-        Commands::Start { name } => println!("start {}", name),
-        Commands::Stop { name } => println!("stop {}", name),
-        Commands::Switch { name } => println!("switch {}", name),
-        Commands::List => println!("list"),
+        Commands::Create { path } => create(path),
+        Commands::Delete { name } => delete(name),
+        Commands::Start { name } => start(name),
+        Commands::Stop { name } => stop(name),
+        Commands::Switch { name } => switch(name),
+        Commands::List => list(),
     }
 }
+
+fn create(path: String) {
+    println!("Creating new realm from definition in {}...", path);
+}
+
+fn delete(name: String) {
+    println!("Deleting {}...", name);
+}
+
+fn start(name: String) {
+    println!("Starting {}...", name);
+}
+
+fn stop(name: String) {
+    println!("Stopping {}...", name);
+}
+
+fn switch(name: String) {
+    println!("Stwitching to {}...", name);
+}
+
+fn list() {
+    println!("Realms:");
+}
+
+
