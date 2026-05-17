@@ -9,8 +9,6 @@ Relm is not a network system or cluster orchestrator.
 
 It is an **operating system whose execution substrate spans multiple machines**.
 
-Networking is treated as a replaceable transport layer, not part of system semantics.
-
 ---
 
 ## 2. Core Philosophy
@@ -19,7 +17,7 @@ Networking is treated as a replaceable transport layer, not part of system seman
 Relm defines computation, identity, and execution semantics independently of networking.
 
 ### 2.2 Personal computational fabric
-A user does not operate multiple devices — they operate a single distributed system.
+A user does not operate multiple devices, rather they operate a single distributed system.
 
 Devices are transient execution substrates, not system boundaries.
 
@@ -48,18 +46,15 @@ Networking is a dependency, not a design constraint.
 
 ## 3. System Architecture
 
-Relm is structured into four conceptual layers:
+Relm is structured into three conceptual layers:
 
 - Identity Layer  
-- Control Plane  
-- Execution Plane  
-- Transport Substrate  
-
-The transport substrate is explicitly replaceable.
+- Control Layer
+- Execution Layer
 
 ---
 
-## 4. Identity Layer (CORE OF RELM)
+## 4. Identity Layer
 
 Identity is fully owned by Relm and is the foundational primitive of the system.
 
@@ -75,42 +70,20 @@ Identity is not tied to IP addresses, hostnames, or network topology.
 
 ### 4.2 Identity hierarchy
 User Root Key
-├── Device Key (laptop)
-├── Device Key (desktop)
-├── Device Key (phone)
-└── Cloud / remote nodes
+|- Device Key (laptop)
+|- Device Key (desktop)
+|- Device Key (phone)
+|- Cloud / remote nodes
 
 Workload Identity (portable computational entity)
-├── state
-├── policy
-└── execution constraints
+|- state
+|- policy
+|- execution constraints
 
 
 Key property:
 
 > Workloads are stable identities independent of where they execute.
-
----
-
-## 5. Transport Layer (Pluggable Substrate)
-
-Relm does not implement networking.
-
-It assumes only:
-
-> secure point-to-point connectivity may exist via some mechanism.
-
-Possible transports:
-
-- WireGuard-based mesh
-- Tailscale (experimental bootstrap layer)
-- self-hosted VPN overlays
-- future IPv6-native routing
-- relay-assisted connectivity when required
-
-Transport is a plugin, not a dependency.
-
-Relm must NOT encode transport assumptions into system semantics.
 
 ---
 
