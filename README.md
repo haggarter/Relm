@@ -1,39 +1,300 @@
 # Relm
-An SDDE Operating System for Individuals and Organizations
+Distributed Personal Computing
 
-## SDDE Philosophy
-- Declarative desktop environment
-- Tiered security
-- Centralized controller for organizations
+## 1. Overview
 
-## Design
-- Arch-based
-- A Realm = A desktop environment
-- Realms defined by YAML
-    - storage
-        - direct: Direct access to root storage
-        - persistent: Isolated to Realm, persists between sessions
-        - ephemeral: Isolated to Realm, 
-    - apps
-        - core: Directly installed in Realm
-            - App 1
-            - App 2
-            - ...
-            - immutable: True/False
-        - vault: Installed within an isolated VM
-            - App 1
-            - App 2
-            - ...
-    - network
-        - allow:
-            - Protocol 1:Port 1
-            - Protocol 2:Port 2
-            - ...
-- Commands:
-```
-relm create <path to .yaml>
-relm delete <Realm name>
-relm start <Realm name>
-relm switch <Realm name>
-relm list
-```
+Relm is a **personal distributed operating system** that treats a user’s devices (laptop, desktop, phone, home servers, and optional cloud nodes) as a single unified computational environment.
+
+Relm is not a network system or cluster orchestrator.
+
+It is an **operating system whose execution substrate spans multiple machines**.
+
+Networking is treated as a replaceable transport layer, not part of system semantics.
+
+---
+
+## 2. Core Philosophy
+
+### 2.1 OS-first abstraction
+Relm defines computation, identity, and execution semantics independently of networking.
+
+### 2.2 Personal computational fabric
+A user does not operate multiple devices — they operate a single distributed system.
+
+Devices are transient execution substrates, not system boundaries.
+
+### 2.3 Continuity over locality
+Relm prioritizes:
+
+- continuity of computation  
+- migration of workloads  
+- persistence of state  
+- policy-driven placement  
+
+over static machine assignment.
+
+### 2.4 Transport agnosticism
+Relm must function regardless of underlying networking:
+
+- LAN  
+- WAN  
+- NAT  
+- VPN overlays  
+- future IPv6-native meshes  
+
+Networking is a dependency, not a design constraint.
+
+---
+
+## 3. System Architecture
+
+Relm is structured into four conceptual layers:
+
+- Identity Layer  
+- Control Plane  
+- Execution Plane  
+- Transport Substrate  
+
+The transport substrate is explicitly replaceable.
+
+---
+
+## 4. Identity Layer (CORE OF RELM)
+
+Identity is fully owned by Relm and is the foundational primitive of the system.
+
+### 4.1 Cryptographic identity model
+
+- User identity = root cryptographic key  
+- Devices = signed key pairs derived from root  
+- Workloads = signed portable execution entities  
+
+Identity is not tied to IP addresses, hostnames, or network topology.
+
+---
+
+### 4.2 Identity hierarchy
+User Root Key
+├── Device Key (laptop)
+├── Device Key (desktop)
+├── Device Key (phone)
+└── Cloud / remote nodes
+
+Workload Identity (portable computational entity)
+├── state
+├── policy
+└── execution constraints
+
+
+Key property:
+
+> Workloads are stable identities independent of where they execute.
+
+---
+
+## 5. Transport Layer (Pluggable Substrate)
+
+Relm does not implement networking.
+
+It assumes only:
+
+> secure point-to-point connectivity may exist via some mechanism.
+
+Possible transports:
+
+- WireGuard-based mesh
+- Tailscale (experimental bootstrap layer)
+- self-hosted VPN overlays
+- future IPv6-native routing
+- relay-assisted connectivity when required
+
+Transport is a plugin, not a dependency.
+
+Relm must NOT encode transport assumptions into system semantics.
+
+---
+
+## 6. Execution Model
+
+### 6.1 Workload
+
+A workload is a first-class Relm entity with:
+
+- identity
+- state
+- execution constraints
+- placement policy
+- migration capability
+
+Example constraints:
+
+- GPU required
+- low-latency preference
+- trusted devices only
+- local-only execution
+- checkpoint interval requirements
+
+---
+
+### 6.2 Execution Plane (per-device agent)
+
+Each device runs a Relm agent responsible for:
+
+- executing workloads locally
+- managing resources
+- checkpointing state
+- reporting telemetry
+- enforcing constraints
+
+Devices are execution hosts, not autonomous systems.
+
+---
+
+### 6.3 Control Plane (distributed coordination layer)
+
+The control plane handles:
+
+- workload scheduling decisions
+- migration decisions
+- policy enforcement
+- reacting to node availability changes
+
+It is:
+
+- decentralized or eventually consistent
+- not a single global controller
+- not dependent on any fixed server
+
+---
+
+## 7. Continuity Model
+
+Relm assumes computation is fragile and migratable.
+
+Nodes may:
+
+- disconnect at any time
+- rejoin later
+- move networks
+- become temporarily unreachable
+
+Therefore:
+
+- workloads must be checkpointable
+- execution must be resumable
+- state must be recoverable
+- computation must tolerate interruption
+
+Continuity is a first-class semantic, not an implementation detail.
+
+---
+
+## 8. Connectivity Model
+
+Relm assumes:
+
+- partial connectivity
+- non-uniform reachability
+- intermittent availability
+- opportunistic routing
+
+Key principle:
+
+> membership in Relm is independent of reachability
+
+A device may belong to Relm but be offline or unreachable.
+
+---
+
+## 9. Discovery Model
+
+Relm does not require global discovery.
+
+Instead it uses:
+
+- local LAN discovery (mDNS-style)
+- manual or cryptographic bootstrap pairing
+- peer-to-peer gossip propagation
+- opportunistic reconnection
+
+Discovery is a consequence of connectivity, not a prerequisite.
+
+---
+
+## 10. Trust and Policy Model
+
+Relm uses capability-based trust:
+
+- devices have roles (GPU node, mobile node, trusted node, etc.)
+- workloads define execution constraints
+- authorization is cryptographically enforced
+
+Trust is:
+
+- explicit
+- user-controlled
+- decentralized
+
+---
+
+## 11. Failure Model
+
+Relm assumes failure is normal:
+
+- nodes fail
+- networks partition
+- workloads pause
+- state becomes temporarily inconsistent
+
+System response:
+
+- retryable execution
+- checkpointing
+- eventual convergence
+- graceful degradation
+
+---
+
+## 12. Non-Goals
+
+Relm explicitly does NOT attempt to:
+
+- replace networking protocols
+- solve NAT traversal
+- guarantee global consensus
+- assume stable cluster infrastructure
+- depend on a central control plane
+- enforce strict real-time consistency
+
+---
+
+## 13. Use of Existing Infrastructure
+
+Relm intentionally builds on existing systems:
+
+- WireGuard-based tunnels
+- Tailscale (temporary experimental substrate)
+- VPN overlays
+- future IPv6-native networks
+
+Infrastructure is replaceable plumbing.
+
+---
+
+## 14. Core Insight
+
+Relm shifts computing from:
+
+> computing on machines
+
+to:
+
+> computing across a personal, distributed, migratable fabric
+
+Networking is incidental. Identity and computation are fundamental.
+
+---
+
+## 15. One-line Definition
+
+Relm is a distributed operating system that treats a user’s devices as a single, policy-driven, migratable computational substrate, independent of underlying network topology.
